@@ -52,10 +52,10 @@ class PratoController extends Controller
         $criado = $prato->save();
 
         if ($criado) {
-             return redirect()->route('prato.index')->with('success', 'Prato criado com sucesso!');
-         } else {
+            return redirect()->route('prato.index')->with('success', 'Prato criado com sucesso!');
+        } else {
             return redirect()->route('prato.index')->with('error', 'Erro ao criar prato!');
-         }
+        }
     }
 
     /**
@@ -74,7 +74,12 @@ class PratoController extends Controller
     public function edit(string $id)
     {
         $prato = Prato::find($id);
+        if ($prato->user_id == @auth()->id()) {
+
         return view('prato_edit', ['prato' => $prato]);
+        }else{
+            return redirect()->route('prato.index')->with('error', 'Você não possui acesso a essa Página!');
+        }
     }
 
     /**
@@ -84,32 +89,34 @@ class PratoController extends Controller
     {
         $this->prato = Prato::find($id);
 
+        if ($this->prato->user_id == @auth()->id()) {
+            if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+                $requestImage = $request->imagem;
 
-        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
-            $requestImage = $request->imagem;
+                $extension = $requestImage->extension();
 
-            $extension = $requestImage->extension();
+                $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
 
-            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+                $requestImage->move(public_path('img/pratos'), $imageName);
 
-            $requestImage->move(public_path('img/pratos'), $imageName);
-
-            $imagem = $imageName;
-
+                $imagem = $imageName;
+            } else {
+                $imagem = $request->imagem_anterior;
+            }
+            $editado =  $this->prato->update([
+                'nome' => $request->nome,
+                'descricao' => $request->descricao,
+                'disponibilidade' => $request->disponibilidade,
+                'imagem' => $imagem,
+                'preco' => $request->preco,
+            ]);
+            if ($editado) {
+                return redirect()->route('prato.index')->with('success', 'Prato editado com sucesso!');
+            } else {
+                return redirect()->route('prato.index')->with('error', 'Erro ao editar prato!');
+            }
         } else {
-            $imagem = $request->imagem_anterior;
-        }
-        $editado =  $this->prato->update([
-            'nome' => $request->nome,
-            'descricao' => $request->descricao,
-            'disponibilidade' => $request->disponibilidade,
-            'imagem' => $imagem,
-            'preco' => $request->preco,
-        ]);
-        if($editado){
-            return redirect()->route('prato.index')->with('success', 'Prato editado com sucesso!');
-        }else{
-            return redirect()->route('prato.index')->with('error', 'Erro ao editar prato!');
+            return redirect()->route('prato.index')->with('error', 'Você não possui acesso a esse recurso!');
         }
     }
 
@@ -119,11 +126,17 @@ class PratoController extends Controller
     public function destroy(string $id)
     {
         $this->prato = Prato::find($id);
-        if ($this->prato->delete()) {
-            
-            return redirect()->route('prato.index')->with('success', 'Prato deletado com sucesso!');
+
+        if ($this->prato->user_id == @auth()->id()) {
+
+            if ($this->prato->delete()) {
+
+                return redirect()->route('prato.index')->with('success', 'Prato deletado com sucesso!');
+            } else {
+                return redirect()->back('prato.index')->with('error', 'Erro ao deletar prato!');
+            }
         } else {
-            return redirect()->back('prato.index')->with('error', 'Erro ao deletar prato!');
+            return redirect()->route('prato.index')->with('error', 'Você não possui acesso a esse recurso!');
         }
     }
 }

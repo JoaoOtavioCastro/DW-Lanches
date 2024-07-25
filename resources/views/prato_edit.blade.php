@@ -1,7 +1,8 @@
 @extends('layouts.main')
 @section('title', 'Prato - editar')
 @section('content')
-<h1>Criar Prato</h1>
+@if($prato->user_id == auth()->user()->id)
+<h1>Editar Prato</h1>
 <form action="{{ route('prato.update', ['prato' => $prato->id]) }}" method="post" enctype="multipart/form-data">
     @csrf
     @method('put')
@@ -25,4 +26,7 @@
     <input type="file" name="imagem" id="imagem">
     <button type="submit">Editar</button>
 </form>
+@else
+<h1>Você não Possui acesso a essa Página!!</h1>
+@endif
 @endsection
