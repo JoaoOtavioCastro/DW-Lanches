@@ -2,8 +2,12 @@
 @section('title', 'Prato - editar')
 @section('content')
 <h1>Criar Prato</h1>
-<form action="{{ route('prato.store') }}" method="post">
+<form action="{{ route('prato.update', ['prato' => $prato->id]) }}" method="post" enctype="multipart/form-data">
     @csrf
+    @method('put')
+    <input type="hidden" name="id" value="{{$prato->id}}">
+    <input type="hidden" name="user_id" value="{{$prato->user_id}}">
+
     <label for="nome">Nome</label>
     <input type="text" name="nome" id="nome" value="{{$prato->nome}}">
     <label for="descricao">Descrição</label>
@@ -14,7 +18,6 @@
     <select name="disponibilidade" id="disponibilidade">
         <option value="Disponivel" {{$prato->disponibilidade == 'Disponivel' ? 'selected' : ''}}>Disponível</option>
         <option value="Indisponivel" {{$prato->disponibilidade == 'Indisponivel' ? 'selected' : ''}}>Indisponível</option>
-    </select>
     </select>
     <label for="imagem">Imagem</label>
     <img src="{{ $prato->imagem }}" alt="{{ $prato->nome }}">

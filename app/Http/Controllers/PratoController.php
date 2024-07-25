@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Prato;
+use App\Models\User;
 
 class PratoController extends Controller
 {
@@ -14,8 +15,10 @@ class PratoController extends Controller
 
     public function index()
     {
+        $pratos = Prato::all();
+
         return view("pratos", [
-            'pratos' => Prato::all(),
+            'pratos' => $pratos,
         ]);
     }
 
@@ -32,27 +35,27 @@ class PratoController extends Controller
      */
     public function store(Request $request)
     {
-        $autor = auth()->user();
         $prato = new Prato();
         $prato->nome = $request->nome;
         $prato->descricao = $request->descricao;
         $prato->disponibilidade = $request->disponibilidade;
+        $prato->preco = $request->preco;
         $prato->user_id = auth()->user()->id;
 
         if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
 
-            $requestImage = $request->image;
-            $imageName = md5($requestImage->getclientOriginalName() . strtotime("now")) . "." . $request->image->getClientOriginalExtension();
-            $request->image->move(public_path('/images'), $imageName);
+            $requestImage = $request->imagem;
+            $imageName = md5($requestImage->getclientOriginalName() . strtotime("now")) . "." . $requestImage->getClientOriginalExtension();
+            $request->imagem->move(public_path('/img/pratos'), $imageName);
             $prato->imagem = $imageName;
         }
         $criado = $prato->save();
 
         if ($criado) {
-            return redirect()->back()->with('success', 'Prato criado com sucesso!');
-        } else {
-            return redirect()->back()->with('error', 'Erro ao criar prato!');
-        }
+             return redirect()->route('prato.index')->with('success', 'Prato criado com sucesso!');
+         } else {
+            return redirect()->route('prato.index')->with('error', 'Erro ao criar prato!');
+         }
     }
 
     /**
@@ -61,7 +64,8 @@ class PratoController extends Controller
     public function show(string $id)
     {
         $prato = Prato::find($id);
-        return view('prato', ['prato' => $prato]);
+        $nome_autor = $prato->user->name;
+        return view('prato', ['prato' => $prato, 'nome_autor' => $nome_autor]);
     }
 
     /**
@@ -81,21 +85,32 @@ class PratoController extends Controller
         $this->prato = Prato::find($id);
 
 
-        if($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
+        if ($request->hasFile('imagem') && $request->file('imagem')->isValid()) {
             $requestImage = $request->imagem;
-            $imageName = md5($requestImage->getclientOriginalName() . strtotime("now")) . "." . $request->imagem->getClientOriginalExtension();
-            $request->imagem->move(public_path('/images'), $imageName);
+
+            $extension = $requestImage->extension();
+
+            $imageName = md5($requestImage->getClientOriginalName() . strtotime("now")) . "." . $extension;
+
+            $requestImage->move(public_path('img/pratos'), $imageName);
+
             $imagem = $imageName;
-        }else{
+
+        } else {
             $imagem = $request->imagem_anterior;
         }
-        $this->prato->update([
+        $editado =  $this->prato->update([
             'nome' => $request->nome,
             'descricao' => $request->descricao,
             'disponibilidade' => $request->disponibilidade,
             'imagem' => $imagem,
             'preco' => $request->preco,
         ]);
+        if($editado){
+            return redirect()->route('prato.index')->with('success', 'Prato editado com sucesso!');
+        }else{
+            return redirect()->route('prato.index')->with('error', 'Erro ao editar prato!');
+        }
     }
 
     /**
@@ -104,7 +119,8 @@ class PratoController extends Controller
     public function destroy(string $id)
     {
         $this->prato = Prato::find($id);
-        if($this->prato->delete()) {
+        if ($this->prato->delete()) {
+            
             return redirect()->route('prato.index')->with('success', 'Prato deletado com sucesso!');
         } else {
             return redirect()->back('prato.index')->with('error', 'Erro ao deletar prato!');

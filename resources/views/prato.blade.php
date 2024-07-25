@@ -4,17 +4,21 @@
     <h1>Prato</h1>
     <p>Nome: {{ $prato->nome }}</p>
     @if ($prato->imagem)
-        <img src="{{ $prato->imagem }}" alt="{{ $prato->nome }}">
+    <figure>
+    <img src="/img/pratos/{{ $prato->imagem }}" alt="{{ $prato->nome }}">
+    </figure>
     @endif
     <p>Descrição: {{ $prato->descricao }}</p>
     <p>Preço: {{ $prato->preco }}</p>
     <p>Disponibilidade: {{ $prato->disponibilidade }}</p>
-    <p>Autor: {{ $prato->user->nome }}</p>
+    <p>Autor: {{ $nome_autor}}</p>
+    @if($prato->user->id == Auth::id())
     <a href="{{ route('prato.edit', $prato->id) }}">Editar</a>
     <form action="{{ route('prato.destroy', $prato->id) }}" method="post">
         @csrf
         @method('delete')
         <button type="submit">Deletar</button>
     </form>
+    @endif
     <a href="{{ route('prato.index') }}">Voltar</a>
 @endsection

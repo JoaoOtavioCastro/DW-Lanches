@@ -21,7 +21,7 @@ class PratoFactory extends Factory
             "nome" => $this->faker->name(),
             "descricao" => $this->faker->text(),
             "Disponibilidade" => $this->faker->word(),
-            // "imagem" => $this->faker->word(),
+             "imagem" => $this->faker->word(),
             "preco" => $this->faker->randomFloat(2, 0, 99999999.99),
             "user_id" => User::all()->random()->id,
         ];
