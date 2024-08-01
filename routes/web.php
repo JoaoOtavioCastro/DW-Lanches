@@ -16,7 +16,7 @@ Route::middleware([
     'verified',
 ])->group(function () {
     Route::get('/dashboard', function () {
-        return view('dashboard');
+        return view('welcome');
     })->name('dashboard');
     Route::get('/pratos/create', [PratoController::class, 'create'])->name('prato.create');
     Route::get('/pratos/my', [PratoController::class, 'my'])->name('prato.my');
