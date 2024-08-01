@@ -22,8 +22,23 @@
         @if (Route::has('login'))
             <nav>
                 @auth
-                    <a href="{{ url('/dashboard') }}">
-                        Dashboard
+                    <a href="{{ route('prato.index') }}">
+                        Pratos
+                    </a>
+                    <a href="{{ route('prato.create') }}">
+                        Novo prato
+                    </a>
+                    <a href="/pedido">
+                        Pedido
+                    </a>
+                    <a href="{{route('pedido.index')}}">
+                        Meus Pedidos 
+                    </a>
+                    <a href="{{ route('prato.my') }}">
+                        Meus Pratos 
+                    </a>
+                    <a href="{{ route('logout') }}">
+                        Log out
                     </a>
                 @else
                     <a href="{{ route('login') }}">

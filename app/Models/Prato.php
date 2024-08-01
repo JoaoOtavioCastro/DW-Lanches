@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\pedidos;
 
 class Prato extends Model
 {
@@ -21,4 +22,9 @@ protected $fillable = [
     {
         return $this->belongsTo(User::class);
     }
+    public function pedidos()
+    {
+        return $this->belongsToMany(Pedidos::class);
+    }
+    
 }

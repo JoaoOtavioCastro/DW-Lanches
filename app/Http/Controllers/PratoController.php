@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Prato;
 use App\Models\User;
+use App\Models\Pedidos;
 
 class PratoController extends Controller
 {
@@ -22,6 +23,14 @@ class PratoController extends Controller
         ]);
     }
 
+    public function my()
+    {
+        $pratos = Prato::where('user_id', auth()->user()->id)->get();
+
+        return view("pratos", [
+            'pratos' => $pratos,
+        ]);
+    }
     /**
      * Show the form for creating a new resource.
      */
@@ -76,8 +85,8 @@ class PratoController extends Controller
         $prato = Prato::find($id);
         if ($prato->user_id == @auth()->id()) {
 
-        return view('prato_edit', ['prato' => $prato]);
-        }else{
+            return view('prato_edit', ['prato' => $prato]);
+        } else {
             return redirect()->route('prato.index')->with('error', 'Você não possui acesso a essa Página!');
         }
     }
@@ -137,6 +146,36 @@ class PratoController extends Controller
             }
         } else {
             return redirect()->route('prato.index')->with('error', 'Você não possui acesso a esse recurso!');
+        }
+    }
+    public function pedir($id_prat)
+    {
+        $prato = Prato::find($id_prat);
+        $pedido = Pedidos::where('user_id', auth()->user()->id)->where('aberto', true)->first();
+        if ($pedido == null) {
+            $pedido = new Pedidos();
+            $pedido->user_id = auth()->user()->id;
+            $pedido->hora_pedido = now();
+            $pedido->aberto = true;
+            $pedido->save();
+        }
+
+        if ($prato == null || $pedido == null) {
+            return redirect()->route('prato.index')->with('success', "Prato ou pedido não encontrado");
+        } else {
+            $prato->pedidos()->attach($pedido);
+            return redirect()->route('prato.index')->with('success', "Prato adicionado ao pedido");
+        }
+    }
+    public function cancelar($id_prat)
+    {
+        $prato = Prato::find($id_prat);
+        $pedido = Pedidos::where('user_id', auth()->user()->id)->where('aberto', true)->first();
+        if ($prato == null || $pedido == null) {
+            return redirect()->route('prato.index')->with('success', "Prato ou pedido não encontrado");
+        } else {
+            $prato->pedidos()->detach($pedido);
+            return redirect()->route('prato.index')->with('success', "Prato removido do pedido");
         }
     }
 }

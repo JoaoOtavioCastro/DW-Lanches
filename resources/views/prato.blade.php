@@ -12,6 +12,12 @@
     <p>Preço: {{ $prato->preco }}</p>
     <p>Disponibilidade: {{ $prato->disponibilidade }}</p>
     <p>Autor: {{ $nome_autor}}</p>
+    @auth
+<form action="{{route('prato.pedir', $prato->id)}}" method="post">
+    @csrf
+    <button type="submit">Pedir</button>
+</form>
+@endauth
     @if($prato->user->id == Auth::id())
     <a href="{{ route('prato.edit', $prato->id) }}">Editar</a>
     <form action="{{ route('prato.destroy', $prato->id) }}" method="post">
