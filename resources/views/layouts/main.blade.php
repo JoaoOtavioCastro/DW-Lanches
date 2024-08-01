@@ -112,7 +112,7 @@
             @auth
             <a href="{{ route('prato.index') }}">Pratos</a>
             <a href="{{ route('prato.create') }}">Novo prato</a>
-            <a href="/pedido">Pedido</a>
+            <a href="/pedido"><img src="{{ asset('img/icons8-carrinho-64.png') }}" alt="Carrinho"></a>
             <a href="{{ route('pedido.index') }}">Meus Pedidos</a>
             <a href="{{ route('prato.my') }}">Meus Pratos</a>
             <form action="{{ route('logout') }}" method="POST" style="display:inline;">
