@@ -106,7 +106,7 @@
                 </figure>
             @endif
             <p><strong>Descrição:</strong> {{ $prato->descricao }}</p>
-            <p><strong>Disponibilidade:</strong> {{ $prato->disponibilidade }}</p>
+            <p><strong>Disponibilidade:</strong> {{ $prato->Disponibilidade }}</p>
             <p><strong>Preço:</strong> {{ $prato->preco }}</p>
             <p><strong>Autor:</strong> {{ $prato->user->name }}</p>
             <a href="/prato/{{$prato->id}}" class="btn-view">Ver mais</a>

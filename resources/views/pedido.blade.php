@@ -76,6 +76,12 @@
     .btn-finalizar:hover {
         background-color: #0056b3;
     }
+    .foto-prato{
+        width: 10vw;
+        height: 10vw;
+        overflow: hidden;
+        border-radius: 50%;
+    }
 </style>
 <div class="pedido-container">
     <h1>Pedido</h1>
@@ -84,8 +90,12 @@
 
     @foreach ($pedido->pratos as $prato)
         <div class="prato-item">
-            <figure>
-                <img src="/img/pratos/{{ $prato->imagem }}" alt="{{ $prato->nome }}" class="prato-image">
+            <figure >
+                <img src="/img/pratos/{{ $prato->imagem }}" alt="{{ $prato->nome }}" style="
+                width: 15vw;
+        height: 15vw;
+        overflow: hidden;
+        border-radius: 50%;">
             </figure>
             <div class="prato-details">
                 <p><strong>Prato:</strong> {{ $prato->nome }}</p>
@@ -101,11 +111,19 @@
         </div>
     @endforeach
 
+    @if($pedido->pratos->count() == 0)
+        <p>Nenhum prato adicionado ao pedido.</p>
+    @endif
+    @if($pedido->aberto)
     <form action="{{ route('pedido.store') }}" method="post" class="form-finalizar">
         @csrf
         <input type="hidden" name="pedido_id" value="{{ $pedido->id }}">
         <button type="submit" class="btn-finalizar">Finalizar Pedido</button>
     </form>
+    @else
+        <p>Pedido finalizado.</p>
+        <a href="{{ route('pedido.index') }}" class="btn-finalizar">Voltar</a>
+    @endif
 </div>
 
 @endsection

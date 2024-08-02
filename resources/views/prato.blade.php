@@ -98,12 +98,16 @@
     @endif
     <p><strong>Descrição:</strong> {{ $prato->descricao }}</p>
     <p><strong>Preço:</strong> R$ {{ number_format($prato->preco, 2, ',', '.') }}</p>
-    <p><strong>Disponibilidade:</strong> {{ $prato->disponibilidade }}</p>
+    <p><strong>Disponibilidade:</strong> {{ $prato->Disponibilidade }}</p>
     <p><strong>Autor:</strong> {{ $nome_autor }}</p>
     @auth
         <form action="{{ route('prato.pedir', $prato->id) }}" method="post" class="action-form">
             @csrf
-            <button type="submit" class="btn-action btn-pedir">Pedir</button>
+            @if($prato->Disponibilidade != 'Indisponivel')
+            <button type="submit" class="btn-action btn-pedir" >Pedir</button>
+            @else
+            <button type="submit" class="btn-action btn-pedir" disabled>Indisponível</button>
+            @endif
         </form>
     @endauth
     @if ($prato->user->id == Auth::id())

@@ -47,7 +47,7 @@ class PratoController extends Controller
         $prato = new Prato();
         $prato->nome = $request->nome;
         $prato->descricao = $request->descricao;
-        $prato->disponibilidade = $request->disponibilidade;
+        $prato->disponibilidade = $request->input('disponibilidade');
         $prato->preco = $request->preco;
         $prato->user_id = auth()->user()->id;
 
@@ -110,12 +110,12 @@ class PratoController extends Controller
 
                 $imagem = $imageName;
             } else {
-                $imagem = $request->imagem_anterior;
+                $imagem = $request->imagem_atual;
             }
             $editado =  $this->prato->update([
                 'nome' => $request->nome,
                 'descricao' => $request->descricao,
-                'disponibilidade' => $request->disponibilidade,
+                'Disponibilidade' => $request->input('disponibilidade'),
                 'imagem' => $imagem,
                 'preco' => $request->preco,
             ]);

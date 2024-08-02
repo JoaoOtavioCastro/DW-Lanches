@@ -225,9 +225,9 @@
             <div class="form-group">
                 <label for="disponibilidade">Disponibilidade</label>
                 <select name="disponibilidade" id="disponibilidade">
-                    <option value="Disponivel" {{$prato->disponibilidade == 'Disponivel' ? 'selected' : ''}}>Disponível
+                    <option value="Disponivel" {{$prato->Disponibilidade == 'Disponivel' ? 'selected' : ''}}>Disponível
                     </option>
-                    <option value="Indisponivel" {{$prato->disponibilidade == 'Indisponivel' ? 'selected' : ''}}>Indisponível
+                    <option value="Indisponivel" {{$prato->Disponibilidade == 'Indisponivel' ? 'selected' : ''}}>Indisponível
                     </option>
                 </select>
             </div>
@@ -239,7 +239,7 @@
                     <input type="file" name="imagem" id="imagem" accept="image/*" onchange="previewImage(event)">
                 </div>
                 @if ($prato->imagem)
-                    <img src="{{ $prato->imagem }}" alt="{{ $prato->nome }}" class="file-upload-image" id="imagePreview">
+                    <img src="{{ asset('/img/pratos/'.$prato->imagem)}}" alt="{{ $prato->nome }}" class="file-upload-image" id="imagePreview">
                 @else
                     <img id="imagePreview" class="file-upload-image" style="display: none;">
                 @endif

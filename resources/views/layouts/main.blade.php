@@ -149,8 +149,8 @@
                 </h3>
             </div>
             <div style="margin: 1vw">
-                <h4><a href="#" class="link-footer">João Otávio</a></h4>
-                <h4><a href="#" class="link-footer">Arthur Vilar</a></h4>
+                <h4><a href="https://github.com/JoaoOtavioCastro" target="_blank" class="link-footer">João Otávio</a></h4>
+                <h4><a href="https://github.com/Marthurmig" target="_blank" class="link-footer">Arthur Vilar</a></h4>
             </div>
         </div>
         Laravel v{{ Illuminate\Foundation\Application::VERSION }} (PHP v{{ PHP_VERSION }})
