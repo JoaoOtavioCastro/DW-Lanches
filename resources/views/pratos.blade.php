@@ -102,7 +102,9 @@
             <h3>{{ $prato->nome }}</h3>
             @if ($prato->imagem)
                 <figure>
-                    <img src="/img/pratos/{{ $prato->imagem }}" alt="{{ $prato->nome }}">
+                    <img src="/img/pratos/{{ $prato->imagem }}" alt="{{ $prato->nome }}" style="
+                    width: 25vw;
+                    ">
                 </figure>
             @endif
             <p><strong>Descrição:</strong> {{ $prato->descricao }}</p>
